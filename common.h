@@ -26,12 +26,12 @@
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/writer.h>
 
-static const std::string RAW_DIR = "C:\\Users\\hurjn\\Documents\\角氰单捞磐\\infocom\\raw\\";
-static const std::string BF_DIR = "C:\\Users\\hurjn\\Documents\\角氰单捞磐\\infocom\\bloom_filter\\c++\\";
-static const std::string PCAP_DIR = "C:\\Users\\hurjn\\Documents\\角氰单捞磐\\infocom\\pcap\\";
+static const std::string RAW_DIR = "C:\\Users\\hurjn\\Documents\\鞁ろ棙雿办澊韯癨\infocom\\raw\\";
+static const std::string BF_DIR = "C:\\Users\\hurjn\\Documents\\鞁ろ棙雿办澊韯癨\infocom\\bloom_filter\\c++\\";
+static const std::string PCAP_DIR = "C:\\Users\\hurjn\\Documents\\鞁ろ棙雿办澊韯癨\infocom\\pcap\\";
 static const std::string DATA_TYPE = "wiki";
 static const std::string PTC_TYPE = "ftp";
-static const std::string ES_ADDR = "203.246.112.139:29200";
+static const std::string ES_ADDR = "localhost:9200";
 static const unsigned int ES_SHARDS = 5;
 static const unsigned int ES_REPLICAS = 0;
 static const unsigned int ES_INDEX_INTERVAL = 1;
