@@ -1,15 +1,17 @@
+#define SAM_DEF
 #include "common.h"
 #include "bf_helper.h"
 #include "es_helper.h"
 
 int main(void) {
-	if (not es::has_index(DATA_TYPE, 128)) {
-		es::create_index(DATA_TYPE, 128, ES_SHARDS, ES_REPLICAS, ES_INDEX_INTERVAL);
-		es::bulk_index(DATA_TYPE, 128);
+	parse_config();
+	if (not es::has_index(DIRECTORY_NAME, WINDOW_SIZE)) {
+		es::create_index(DIRECTORY_NAME, WINDOW_SIZE, ES_SHARDS, ES_REPLICAS, ES_INDEX_INTERVAL);
+		es::bulk_index(DIRECTORY_NAME, WINDOW_SIZE);
 		Sleep(2000);
 	}
 	
-	bloom_filter bf = init_bf(DATA_TYPE, 128, 0.001);
+	bloom_filter bf = init_bf(DIRECTORY_NAME, WINDOW_SIZE, BF_ERROR_RATE);
 	std::cout << std::endl;
 	std::cout << "===== Bloom filter info ============" << std::endl;
 	std::cout << "element count : " << bf.element_count() << std::endl;
@@ -17,17 +19,15 @@ int main(void) {
 	std::cout << "false positive ratio : "<< bf.effective_fpp() << std::endl;
 	std::cout << "====================================" << std::endl;
 
-	std::string fullPcapDir = PCAP_DIR + DATA_TYPE + "\\" + PTC_TYPE;
-
 	struct pcap_pkthdr* header;
 	char errbuff[PCAP_ERRBUF_SIZE];
 	pcap_t* pcap;
 	const u_char* data;
 	unsigned long long packetBytes = 0;
 	double duration = 0;
-	for (const auto& entry : std::filesystem::directory_iterator(fullPcapDir)) {
-		pcap = pcap_open_offline(entry.path().string().c_str(), errbuff);
+	for (const auto& entry : std::filesystem::directory_iterator(PCAP_DIR)) {
 		std::cout << "Inspect PCAP " << entry.path() << std::endl;
+		pcap = pcap_open_offline(entry.path().string().c_str(), errbuff);
 		std::vector<std::string> filteredChunks;
 		unsigned int chunkSize = 0;
 		while (int returnValue = pcap_next_ex(pcap, &header, &data) >= 0)
@@ -47,7 +47,7 @@ int main(void) {
 		}
 		if (filteredChunks.size()) {
 			clock_t startTime = clock();
-			std::string esRes = es::search(filteredChunks, DATA_TYPE, 128);
+			std::string esRes = es::search(filteredChunks, DIRECTORY_NAME, 128);
 			rapidjson::Document resJson;
 			resJson.Parse(esRes.c_str());
 			clock_t endTime = clock();
