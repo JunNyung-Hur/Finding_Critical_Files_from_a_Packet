@@ -1,6 +1,8 @@
 #ifndef ES_HELPER_H
 #define ES_HELPER_H
 #include "common.h"
+#include "ae_chunking.h"
+#include "utils.h"
 
 //std::string INDEX_DIR;
 //

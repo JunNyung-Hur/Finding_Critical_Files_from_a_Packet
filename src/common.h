@@ -44,8 +44,5 @@ EXT unsigned int ES_SHARDS;
 EXT unsigned int ES_REPLICAS;
 EXT unsigned int ES_INDEX_INTERVAL;
 
-#include "ae_chunking.h"
-#include "utils.h"
-
 #endif 
 

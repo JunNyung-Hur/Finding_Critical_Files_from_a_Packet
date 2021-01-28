@@ -1,6 +1,8 @@
 #ifndef BF_HELPER_H
 #define BF_HELPER_H
 #include "common.h"
+#include "ae_chunking.h"
+#include "utils.h"
 #include "bloomfilter.hpp"
 
 //std::string INDEX_DIR;

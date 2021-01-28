@@ -2,6 +2,8 @@
 #include "common.h"
 #include "bf_helper.h"
 #include "es_helper.h"
+#include "ae_chunking.h"
+#include "utils.h"
 
 int main(void) {
 	parse_config();
