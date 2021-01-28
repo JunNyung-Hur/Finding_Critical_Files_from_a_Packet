@@ -29,9 +29,9 @@ std::string get_md5(std::string _data) {
 }
 
 void parse_config() {
-	std::filesystem::path projectRoot = std::filesystem::path(__FILE__).parent_path().parent_path().parent_path();
-	std::filesystem::path configName("config.txt");
-	std::filesystem::path configPath = projectRoot / configName;
+	std::experimental::filesystem::path projectRoot = std::experimental::filesystem::path(__FILE__).parent_path().parent_path().parent_path();
+	std::experimental::filesystem::path configName("config.txt");
+	std::experimental::filesystem::path configPath = projectRoot / configName;
 	std::ifstream cFile(configPath.string());
 	if (cFile.is_open())
 	{
@@ -51,7 +51,7 @@ void parse_config() {
 			}
 			else if (key == "INDEX_DIR") {
 				INDEX_DIR = value;
-				DIRECTORY_NAME = std::filesystem::path(value).filename().string();
+				DIRECTORY_NAME = std::experimental::filesystem::path(value).filename().string();
 			}
 			else if (key == "BLOOMFILTER_DIR") {
 				BLOOMFILTER_DIR = value;

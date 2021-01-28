@@ -1,13 +1,13 @@
 #include "bf_helper.h"
 
 bloom_filter init_bf(std::string _dirName, int _windowSize, float _errorRate) {
-	std::filesystem::path bfDir(BLOOMFILTER_DIR);
-	std::filesystem::path bfName(_dirName + string_format("_%d_%.0e.bf", _windowSize, _errorRate));
-	std::filesystem::path bf_path = bfDir / bfName;
-	if (not std::filesystem::exists(bf_path)) {
+	std::experimental::filesystem::path bfDir(BLOOMFILTER_DIR);
+	std::experimental::filesystem::path bfName(_dirName + string_format("_%d_%.0e.bf", _windowSize, _errorRate));
+	std::experimental::filesystem::path bf_path = bfDir / bfName;
+	if (not std::experimental::filesystem::exists(bf_path)) {
 		std::set<std::string> chunkSet;
 		std::cout << "Create Bloom Filter ... ";
-		for (const auto& entry : std::filesystem::directory_iterator(INDEX_DIR)) {
+		for (const auto& entry : std::experimental::filesystem::directory_iterator(INDEX_DIR)) {
 			std::ifstream is(entry.path(), std::ifstream::binary);
 			if (is) {
 				is.seekg(0, is.end);

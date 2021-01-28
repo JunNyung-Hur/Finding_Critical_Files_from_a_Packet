@@ -25,7 +25,7 @@ int main(void) {
 	const u_char* data;
 	unsigned long long packetBytes = 0;
 	double duration = 0;
-	for (const auto& entry : std::filesystem::directory_iterator(PCAP_DIR)) {
+	for (const auto& entry : std::experimental::filesystem::directory_iterator(PCAP_DIR)) {
 		std::cout << "Inspect PCAP " << entry.path() << std::endl;
 		pcap = pcap_open_offline(entry.path().string().c_str(), errbuff);
 		std::vector<std::string> filteredChunks;

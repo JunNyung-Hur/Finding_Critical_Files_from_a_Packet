@@ -54,7 +54,7 @@ void es::create_index(std::string _dirName, unsigned int _windowSize, unsigned i
 void es::bulk_index(std::string _dirName, unsigned int _windowSize) {
 	std::string indexName = _dirName + "_" + std::to_string(_windowSize);
 	std::string bulkBody = "";
-	for (const auto& entry : std::filesystem::directory_iterator(INDEX_DIR)) {
+	for (const auto& entry : std::experimental::filesystem::directory_iterator(INDEX_DIR)) {
 		std::ifstream is(entry.path(), std::ifstream::binary);
 		if (is) {
 			is.seekg(0, is.end);
