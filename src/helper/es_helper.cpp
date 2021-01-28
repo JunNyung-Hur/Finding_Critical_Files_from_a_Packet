@@ -1,8 +1,8 @@
 #include "es_helper.h"
 
-bool es::has_index(std::string _dirName, unsigned int _windowSize) {
+bool es::has_index(std::string _indexName, unsigned int _windowSize) {
 	std::cout << "Check the index exists ... ";
-	std::string indexName = _dirName + "_" + std::to_string(_windowSize);
+	std::string indexName = _indexName + "_" + std::to_string(_windowSize);
 	std::string reqUrl = "http://" + ES_ADDR + "/" + indexName;
 	CURL* curl;
 	CURLcode res;
@@ -26,8 +26,8 @@ bool es::has_index(std::string _dirName, unsigned int _windowSize) {
 	}
 }
 
-void es::create_index(std::string _dirName, unsigned int _windowSize, unsigned int _shards, unsigned int _replicas, unsigned int _interval) {
-	std::string indexName = _dirName + "_" + std::to_string(_windowSize);
+void es::create_index(std::string _indexName, unsigned int _windowSize, unsigned int _shards, unsigned int _replicas, unsigned int _interval) {
+	std::string indexName = _indexName + "_" + std::to_string(_windowSize);
 	std::cout << "Create index \"" + indexName + "\" ... ";
 	std::string reqUrl = "http://" + ES_ADDR + "/" + indexName;
 	std::string mappingBody = data::get_mapping_json(_shards, _replicas, _interval);
@@ -51,8 +51,8 @@ void es::create_index(std::string _dirName, unsigned int _windowSize, unsigned i
 	std::cout << "done" << std::endl;
 }
 
-void es::bulk_index(std::string _dirName, unsigned int _windowSize) {
-	std::string indexName = _dirName + "_" + std::to_string(_windowSize);
+void es::bulk_index(std::string _indexName, unsigned int _windowSize) {
+	std::string indexName = _indexName + "_" + std::to_string(_windowSize);
 	std::string bulkBody = "";
 	for (const auto& entry : std::experimental::filesystem::directory_iterator(INDEX_DIR)) {
 		std::ifstream is(entry.path(), std::ifstream::binary);
@@ -100,8 +100,8 @@ void es::bulk_index(std::string _dirName, unsigned int _windowSize) {
 	std::cout << readBuffer << std::endl;
 }
 
-std::string es::search(std::vector<std::string> _md5Chunks, std::string _dirName, unsigned int _windowSize) {
-	std::string indexName = _dirName + "_" + std::to_string(_windowSize);
+std::string es::search(std::vector<std::string> _md5Chunks, std::string _indexName, unsigned int _windowSize) {
+	std::string indexName = _indexName + "_" + std::to_string(_windowSize);
 	std::string reqUrl = "http://" + ES_ADDR + "/" + indexName + "/_search";
 	std::string searchBody = data::get_query_json(_md5Chunks);
 	CURL* curl;

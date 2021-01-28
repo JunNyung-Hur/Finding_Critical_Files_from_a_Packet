@@ -51,7 +51,6 @@ void parse_config() {
 			}
 			else if (key == "INDEX_DIR") {
 				INDEX_DIR = value;
-				DIRECTORY_NAME = std::experimental::filesystem::path(value).filename().string();
 			}
 			else if (key == "BLOOMFILTER_DIR") {
 				BLOOMFILTER_DIR = value;
@@ -70,6 +69,9 @@ void parse_config() {
 			}
 			else if (key == "ES_INDEX_INTERVAL") {
 				ES_INDEX_INTERVAL = std::stoi(value);
+			}
+			else if (key == "INDEX_NAME"){
+				INDEX_NAME = value;
 			}
 		}
 	}

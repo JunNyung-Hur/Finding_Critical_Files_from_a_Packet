@@ -10,6 +10,7 @@
 #include <fstream>
 #include <set>
 #include <ctime>
+#include <unistd.h>
 
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
@@ -43,6 +44,6 @@ EXT std::string ES_ADDR;
 EXT unsigned int ES_SHARDS;
 EXT unsigned int ES_REPLICAS;
 EXT unsigned int ES_INDEX_INTERVAL;
-
+EXT std::string INDEX_NAME;
 #endif 
 

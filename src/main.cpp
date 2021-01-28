@@ -7,13 +7,12 @@
 
 int main(void) {
 	parse_config();
-	if (not es::has_index(DIRECTORY_NAME, WINDOW_SIZE)) {
-		es::create_index(DIRECTORY_NAME, WINDOW_SIZE, ES_SHARDS, ES_REPLICAS, ES_INDEX_INTERVAL);
-		es::bulk_index(DIRECTORY_NAME, WINDOW_SIZE);
-		Sleep(2000);
+	if (not es::has_index(INDEX_NAME, WINDOW_SIZE)) {
+		es::create_index(INDEX_NAME, WINDOW_SIZE, ES_SHARDS, ES_REPLICAS, ES_INDEX_INTERVAL);
+		es::bulk_index(INDEX_NAME, WINDOW_SIZE);
+		sleep(2000);
 	}
-	
-	bloom_filter bf = init_bf(DIRECTORY_NAME, WINDOW_SIZE, BF_ERROR_RATE);
+	bloom_filter bf = init_bf(INDEX_NAME, WINDOW_SIZE, BF_ERROR_RATE);
 	std::cout << std::endl;
 	std::cout << "===== Bloom filter info ============" << std::endl;
 	std::cout << "element count : " << bf.element_count() << std::endl;
@@ -49,7 +48,7 @@ int main(void) {
 		}
 		if (filteredChunks.size()) {
 			clock_t startTime = clock();
-			std::string esRes = es::search(filteredChunks, DIRECTORY_NAME, 128);
+			std::string esRes = es::search(filteredChunks, INDEX_NAME, 128);
 			rapidjson::Document resJson;
 			resJson.Parse(esRes.c_str());
 			clock_t endTime = clock();
