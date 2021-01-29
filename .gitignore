@@ -3,4 +3,5 @@
 *.vcxproj
 *.vcxproj.*
 main
+!src/main.cpp
 *.gch

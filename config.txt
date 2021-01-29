@@ -5,7 +5,7 @@ BLOOMFILTER_ERROR_RATE = 0.001
 # Directories location
 INDEX_DIR = /home/infosec/infocom/raw/malware/index
 BLOOMFILTER_DIR = /home/infosec/infocom/bf/c++
-PCAP_DIR = /home/infosec/infocom/pcap/socket/malware
+PCAP_DIR = /home/infosec/infocom/pcap/http/malware
 
 # Elasticsearch configuration
 ES_ADDR = 192.168.0.8:9200
