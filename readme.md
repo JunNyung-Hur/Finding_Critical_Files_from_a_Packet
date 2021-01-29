@@ -6,8 +6,8 @@
 ## Dependencies
 The following package is required to build this project:
 - boost >= 1.6.x
-- openssl
-- curl
+- libopenssl
+- libcurl
 - rapidjson 
 - elasticsearch >= 7.x
 
