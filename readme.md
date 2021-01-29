@@ -8,8 +8,10 @@
 
 ## Requirements
 The following package is required to build this project:
-- boost >= 1.7.5
+- boost >= 1.6.x
 - openssl
 - curl
 - rapidjson 
+- elasticsearch >= 7.x
+
 
