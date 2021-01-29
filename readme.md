@@ -8,6 +8,7 @@ The following package is required to build this project:
 - boost >= 1.6.x
 - libopenssl
 - libcurl
+- libpcap
 - rapidjson 
 - elasticsearch >= 7.x
 
