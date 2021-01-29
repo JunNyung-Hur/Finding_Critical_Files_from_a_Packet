@@ -6,8 +6,8 @@
 
 namespace es {
 	bool has_index(std::string _indexName, unsigned int _windowSize);
-	void create_index(std::string _indexName, unsigned int _windowSize, unsigned int _shards, unsigned int _replicas, unsigned int _interval);
-	void bulk_index(std::string _indexName, unsigned int _windowSize);
+	bool create_index(std::string _indexName, unsigned int _windowSize, unsigned int _shards, unsigned int _replicas, unsigned int _interval);
+	bool bulk_index(std::string _indexName, unsigned int _windowSize);
 	std::string search(std::vector<std::string> _md5Chunks, std::string _indexName, unsigned int _windowSize);
 	namespace data {
 		std::string get_query_json(std::vector<std::string> _md5Chunks);

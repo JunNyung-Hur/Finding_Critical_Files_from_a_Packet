@@ -4,11 +4,13 @@ bloom_filter init_bf(std::string _indexName, int _windowSize, float _errorRate) 
 	std::experimental::filesystem::path bfDir(BLOOMFILTER_DIR);
 	std::experimental::filesystem::path bfName(_indexName + string_format("_%d_%.0e.bf", _windowSize, _errorRate));
 	std::experimental::filesystem::path bf_path = bfDir / bfName;
+	int dirFilesCnt = get_number_of_files(INDEX_DIR);
+	int processedCnt = 1;
 	if (not std::experimental::filesystem::exists(bf_path)) {
 		std::set<std::string> chunkSet;
-		std::cout << "Create Bloom Filter ... ";
-		std::cout << INDEX_DIR << std::endl;
+		std::cout << "Create Bloom Filter ..." << std::endl;
 		for (const auto& entry : std::experimental::filesystem::directory_iterator(INDEX_DIR)) {
+			std::cout << string_format("\rCalculate the number of chunks in files (%d/%d) ... ", processedCnt, dirFilesCnt) << std::flush;
 			std::ifstream is(entry.path(), std::ifstream::binary);
 			if (is) {
 				is.seekg(0, is.end);
@@ -26,7 +28,10 @@ bloom_filter init_bf(std::string _indexName, int _windowSize, float _errorRate) 
 				free(buffer);
 
 			}
+			processedCnt++;
 		}
+		std::cout << "done" << std::endl;
+		std::cout << "Build bloom filter ... " << std::flush;
 		bloom_parameters parameters;
 		parameters.projected_element_count = chunkSet.size();
 		parameters.false_positive_probability = _errorRate;

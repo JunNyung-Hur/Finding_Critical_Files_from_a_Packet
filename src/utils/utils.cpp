@@ -9,6 +9,17 @@ void print_chunk_arr(std::vector<std::vector<unsigned char>> _chunkArr) {
 	}
 };
 
+int get_number_of_files(std::string _dirPath){
+	auto dirIter = std::experimental::filesystem::directory_iterator(_dirPath);
+
+	int fileCnt = std::count_if(
+    	std::experimental::filesystem::begin(dirIter),
+    	std::experimental::filesystem::end(dirIter),
+    	[](auto& entry) { return std::experimental::filesystem::is_regular_file(entry); }
+	);
+	return fileCnt;
+}
+
 size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* userp)
 {
 	((std::string*)userp)->append((char*)contents, size * nmemb);

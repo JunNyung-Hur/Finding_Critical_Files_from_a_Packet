@@ -26,13 +26,13 @@ bool es::has_index(std::string _indexName, unsigned int _windowSize) {
 	}
 }
 
-void es::create_index(std::string _indexName, unsigned int _windowSize, unsigned int _shards, unsigned int _replicas, unsigned int _interval) {
+bool es::create_index(std::string _indexName, unsigned int _windowSize, unsigned int _shards, unsigned int _replicas, unsigned int _interval) {
 	std::string indexName = _indexName + "_" + std::to_string(_windowSize);
 	std::cout << "Create index \"" + indexName + "\" ... ";
 	std::string reqUrl = "http://" + ES_ADDR + "/" + indexName;
 	std::string mappingBody = data::get_mapping_json(_shards, _replicas, _interval);
 	CURL* curl;
-	CURLcode res;
+	CURLcode resCode;
 	std::string readBuffer;
 	curl = curl_easy_init();
 	curl_easy_setopt(curl, CURLOPT_VERBOSE, 0);
@@ -46,15 +46,32 @@ void es::create_index(std::string _indexName, unsigned int _windowSize, unsigned
 	curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT");
 	curl_easy_setopt(curl, CURLOPT_POSTFIELDS, mappingBody.c_str());
 	curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, mappingBody.size());
-	res = curl_easy_perform(curl);
+	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+
+	resCode = curl_easy_perform(curl);
 	curl_easy_cleanup(curl);
-	std::cout << "done" << std::endl;
+	rapidjson::Document resJson;
+	resJson.Parse(readBuffer.c_str());
+	bool isSuccess = resJson["acknowledged"].GetBool();
+	if (isSuccess){
+		std::cout << "done" << std::endl;
+		return true;
+	}
+	else{
+		std::cout << "Error during index creation" << std::endl;
+		return false;
+	}
 }
 
-void es::bulk_index(std::string _indexName, unsigned int _windowSize) {
+bool es::bulk_index(std::string _indexName, unsigned int _windowSize) {
 	std::string indexName = _indexName + "_" + std::to_string(_windowSize);
 	std::string bulkBody = "";
+	std::cout << "Start bulk procedure ..." << std::endl;
+	int dirFilesCnt = get_number_of_files(INDEX_DIR);
+	int processedCnt = 1;
 	for (const auto& entry : std::experimental::filesystem::directory_iterator(INDEX_DIR)) {
+		std::cout << string_format("\rPreprocess for indexing (%d/%d) ... ", processedCnt, dirFilesCnt) << std::flush;
 		std::ifstream is(entry.path(), std::ifstream::binary);
 		if (is) {
 			is.seekg(0, is.end);
@@ -75,8 +92,12 @@ void es::bulk_index(std::string _indexName, unsigned int _windowSize) {
 			std::string bulkJson = data::get_bulk_json(indexName, md5Chunks, entry.path().filename().string());
 			bulkBody += bulkJson + "\n";
 		}
+		processedCnt++;
 	}
-
+	std::cout << "done" << std::endl;
+	std::cout << "Request Bulk API ..." << std::endl;
+	unsigned long successCnt = 0;
+	unsigned long failCnt = 0;
 	std::string reqUrl = "http://" + ES_ADDR + "/_bulk";
 	CURL* curl;
 	CURLcode res;
@@ -95,9 +116,30 @@ void es::bulk_index(std::string _indexName, unsigned int _windowSize) {
 	curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, bulkBody.size());
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+
 	res = curl_easy_perform(curl);
 	curl_easy_cleanup(curl);
-	std::cout << readBuffer << std::endl;
+	rapidjson::Document resJson;
+	resJson.Parse(readBuffer.c_str());
+	rapidjson::Value items = resJson["items"].GetArray();
+	for (rapidjson::Value::ConstValueIterator item = items.Begin(); item != items.End(); ++item){
+		std::string result = (*item)["index"]["result"].GetString();
+		if (result == "created"){
+			successCnt++;
+		}
+		else{
+			failCnt++;
+		}
+
+	}
+	std::cout << "done" << std::endl;
+	std::cout << " -> no. of successes : " << successCnt << std::endl;
+	std::cout << " -> no. of failures : " << failCnt << std::endl;
+
+	if (failCnt){
+		return false;
+	}
+	return true;
 }
 
 std::string es::search(std::vector<std::string> _md5Chunks, std::string _indexName, unsigned int _windowSize) {

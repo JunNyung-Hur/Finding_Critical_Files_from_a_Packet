@@ -3,13 +3,13 @@ CHUNKING_WINDOW_SIZE = 128
 BLOOMFILTER_ERROR_RATE = 0.001
 
 # Directories location
-INDEX_DIR = /home/infosec/infocom/raw/wiki/index
+INDEX_DIR = /home/infosec/infocom/raw/malware/index
 BLOOMFILTER_DIR = /home/infosec/infocom/bf/c++
-PCAP_DIR = /home/infosec/infocom/pcap/http/wiki
+PCAP_DIR = /home/infosec/infocom/pcap/socket/malware
 
 # Elasticsearch configuration
 ES_ADDR = 192.168.0.8:9200
 ES_SHARDS = 5
 ES_REPLICAS = 0
 ES_INDEX_INTERVAL = 1
-INDEX_NAME = wiki
+INDEX_NAME = malware
